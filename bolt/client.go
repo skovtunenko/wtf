@@ -12,19 +12,19 @@ type Client struct {
 	// Filename to the BoltDB database.
 	Path string
 
-	// Authenticator to use.
-	Authenticator wtf.Authenticator
-
 	// Returns the current time.
 	Now func() time.Time
+
+	// Services
+	dialService DialService
 
 	db *bolt.DB
 }
 
 func NewClient() *Client {
-	return &Client{
-		Now: time.Now,
-	}
+	c := &Client{Now: time.Now}
+	c.dialService.client = c
+	return c
 }
 
 // Open opens and initializes the BoltDB database.
@@ -58,10 +58,5 @@ func (c *Client) Close() error {
 	return nil
 }
 
-// Connect returns a new session to the BoltDB database.
-func (c *Client) Connect() *Session {
-	s := newSession(c.db)
-	s.authenticator = c.Authenticator
-	s.now = c.Now()
-	return s
-}
+// DialService returns the dial service associated with the client.
+func (c *Client) DialService() wtf.DialService { return &c.dialService }
