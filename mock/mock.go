@@ -11,7 +11,7 @@ type DialService struct {
 	CreateDialFn      func(dial *wtf.Dial) error
 	CreateDialInvoked bool
 
-	SetLevelFn      func(id wtf.DialID, level float64) error
+	SetLevelFn      func(id wtf.DialID, token string, level float64) error
 	SetLevelInvoked bool
 }
 
@@ -25,7 +25,7 @@ func (s *DialService) CreateDial(dial *wtf.Dial) error {
 	return s.CreateDialFn(dial)
 }
 
-func (s *DialService) SetLevel(id wtf.DialID, level float64) error {
+func (s *DialService) SetLevel(id wtf.DialID, token string, level float64) error {
 	s.SetLevelInvoked = true
-	return s.SetLevelFn(id, level)
+	return s.SetLevelFn(id, token, level)
 }
